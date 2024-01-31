@@ -64,7 +64,7 @@ Make sure to install these dependencies before proceeding with building and flas
 
 Follow these steps to build and flash the project:
 
-1. Clone the repository: `git clone https://github.com/your_username/your_project.git`
+1. Clone the repository: `git clone https://github.com/mycareer6107/nRF5340-Smartwatch-Health-Monitoring-Project.git`
 2. Navigate to the project directory: `cd your_project`
 3. Build the project: `west build -b nrf5340dk_nrf5340_cpuapp`
 4. Flash the project: `west flash`
