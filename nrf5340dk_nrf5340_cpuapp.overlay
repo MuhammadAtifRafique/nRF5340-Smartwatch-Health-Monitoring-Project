@@ -1,0 +1,40 @@
+// To get started, press Ctrl+Space to bring up the completion menu and view the available nodes.
+
+// You can also use the buttons in the sidebar to perform actions on nodes.
+// Actions currently available include:
+
+// * Enabling / disabling the node
+// * Adding the bus to a bus
+// * Removing the node
+// * Connecting ADC channels
+
+// For more help, browse the DeviceTree documentation at https://docs.zephyrproject.org/latest/guides/dts/index.html
+// You can also visit the nRF DeviceTree extension documentation at https://nrfconnect.github.io/vscode-nrf-connect/devicetree/nrfdevicetree.html
+// below configuration for mpu6050
+&i2c1{
+    mpu6050:mpu6050@68{
+        compatible = "i2c-device";
+        reg = < 0x68 >;
+        status = "okay";
+        label = "MPU6050";
+    };
+};
+// below configuration for max301012
+&i2c1 {
+    max3010x: max3010x@57{
+        compatible = "i2c-device";
+        reg = < 0x57 >;
+        label = "MAX3010X";
+        status = "okay";
+    };
+};
+// below configuration for bmp280
+&i2c1{
+    bmp280:bmp280@76{
+        compatible = "i2c-device";
+        reg = < 0x76 >;
+        status = "okay";
+        label = "BMP280";
+    };
+};
+

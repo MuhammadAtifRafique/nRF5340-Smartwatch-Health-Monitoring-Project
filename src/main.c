@@ -1,6 +1,74 @@
-#include <zephyr/kernel.h>
+#include <zephyr/kernel.h> // <>
+#include "max30102.h" // ""
+#include "mpu6050.h" // ""
+#include "bmp280.h" // ""
+#include <string.h> // <>
 
 int main(void)
 {
-        return 0;
+  //////////////////////// | Start General initilization | ///////////////////////////////////////////
+  // No still
+  ////////////////////////////// | End of General initilization | /////////////////////////////////////
+
+  //////////////////////// | Start BPM280 initilization | ///////////////////////////////////////////
+  
+  while(!(bmp280_config())){
+    printk("\033[31mFaild BPM280 initialization!!!\033[0m\r\n");
+    k_msleep(1000);
+  }
+  
+  ////////////////////////////// | End of BMP280 initilization | /////////////////////////////////////
+
+  ////////////////////////////////| Start mpu6050 initilization | /////////////////////////////////////
+  
+  init_mpu6050();
+  
+  /////////////////////////////// | End of mpu6050 initilization | //////////////////////////////////////
+  /////////////////////////////// | Start max30102 initilization | //////////////////////////////////////
+  
+  while(!(max30102_Begin())){
+    printk("\033[31mFaild MAX30102 initialization!!!\033[0m\r\n");
+    k_msleep(1000);
+  }
+  
+  ////////////////////////////// | End of max30102 initilization | ///////////////////////////////////////
+  k_msleep(500);
+  while(1){
+    ///////////////////////////////////| Start BMP280 work | //////////////////////////////////////////
+    
+    printk("\033[32m/////////////////////////////////////////////| BMP280 Sensor | ////////////////////////////////////////////////////\033[0m\r\n");
+    u32 temperature=0,pressure=0;
+    bmp280_read(&temperature,&pressure);
+    printk("[INFO] Temperature: %u degC, Pressure: %d pa \r\n", temperature, pressure);
+    k_msleep(1000);
+    
+    ///////////////////////////////////| End of BMP280 work | //////////////////////////////////////////
+    ////////////////////////////////////| Start mpu6050 work | //////////////////////////////////////////
+    
+    step_counter(); // its have while loop
+    
+    ///////////////////////////////////| End of mpu6050 work | //////////////////////////////////////////
+    ///////////////////////////////////| Start max30102 work | //////////////////////////////////////////
+    
+    printk("\033[32m/////////////////////////////////////////////| MAX30102 Sensor | ////////////////////////////////////////////////////\033[0m\r\n");
+    char Stress[60];
+    uint32_t hr=0,spo2=0;
+    printk("[INFO] Red = %u | IR = %u\r\n", max30102_GetRed(), max30102_GetIR());
+    if (get_hr_spo2(&hr,&spo2)){
+      printk("\x1b[32m[INFO] Heart rate is %u | SPO2 is %u\x1b[0m\r\n",hr,spo2);
+      k_msleep(3000);
+    }
+    else{
+      printk("\x1b[33m[INFO] For heart rate place your finger ....!!!\x1b[0m\r\n");
+    }
+    printk("[INFO] Calculating stress\r\n");
+    get_stress_level(Stress);
+    printk("[INFO] %s\r\n",Stress);
+    k_msleep(3000); 
+    
+    ////////////////////////////// | End of max30102 work | ///////////////////////////////////////
+    
+  }
+  return 0;
 }
+//////////////////////////////////////// | End of Main Code  | ////////////////////////////////////////////////
